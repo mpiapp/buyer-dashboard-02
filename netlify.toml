@@ -1,0 +1,12 @@
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
+force = false
+
+
+[[headers]]
+for = "/*"
+[headers.values]
+X-Frame-Options = "SAMEORIGIN"
+X-Robots-Tag = "index, follow"

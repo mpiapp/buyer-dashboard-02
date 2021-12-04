@@ -1,0 +1,21 @@
+
+.container-gmail-login {
+    border: 1px solid gray;
+    border-radius: 5px;
+    width: 100%;
+    margin-top: 40px;
+    cursor: pointer;
+}
+
+.gmail-login {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    margin: 0;
+    h5 {
+        font-size: 15px;
+        padding-left: 10px;
+        margin: 0;
+    }
+}

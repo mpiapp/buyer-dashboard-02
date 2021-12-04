@@ -1,0 +1,342 @@
+{
+  "modules": [
+    {
+      "name": "Manage PR",
+      "link": "/manage-pr",
+      "flag": "VENDOR",
+      "feature_ids": [
+        "id1",
+        "id2"
+      ],
+      "id": "asdfadfa13asdsfa"
+    },
+    {
+      "name": "Manage PO",
+      "link": "/manage-po",
+      "flag": "BUYER",
+      "feature_ids": [
+        "1",
+        "2"
+      ],
+      "id": "dgasfadfa13asdsfa"
+    },
+    {
+      "name": "Profile",
+      "link": "/profile",
+      "flag": "BUYER",
+      "feature_ids": [
+        "1",
+        "2"
+      ],
+      "id": "gchMWP8"
+    },
+    {
+      "name": "Manage PR",
+      "link": "/manage-pr",
+      "flag": "BUYER",
+      "feature_ids": [
+        "id1",
+        "id2"
+      ],
+      "id": "aoLxXdv"
+    }
+  ],
+  "roles": [
+    {
+      "id": "asdfah123sda",
+      "name": "Admin",
+      "flag": "VENDOR",
+      "module_ids": [
+        "mid1",
+        "mid2"
+      ]
+    },
+    {
+      "name": "Superuser",
+      "id": "UJ7-SLj",
+      "flag": "VENDOR",
+      "module_ids": [
+        "mid1",
+        "mid2"
+      ]
+    },
+    {
+      "name": "Owner",
+      "id": "6rL3Fa2",
+      "flag": "VENDOR",
+      "module_ids": [
+        "mid1",
+        "mid2"
+      ]
+    },
+    {
+      "name": "Picker",
+      "flag": "VENDOR",
+      "module_ids": [
+        "asdfadfa13asdsfa"
+      ],
+      "id": "NTvsv2I"
+    },
+    {
+      "name": "SuperAdmin",
+      "id": "UJ7-asdf",
+      "flag": "VENDOR",
+      "module_ids": [
+        "mid1",
+        "mid2"
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "read",
+      "id": "_byDibm"
+    },
+    {
+      "name": "update",
+      "id": "DmIB2n0"
+    },
+    {
+      "name": "create",
+      "id": "QCVJu0a"
+    },
+    {
+      "name": "delete",
+      "id": "EkdY1kC"
+    }
+  ],
+  "features": [
+    {
+      "name": "Purchase Order",
+      "flag": "BUYER",
+      "capabilities": [
+        "YiliWMj",
+        "DmIB2n0",
+        "QCVJu0a",
+        "_byDibm"
+      ],
+      "id": "CDqan2G"
+    },
+    {
+      "name": "Orders",
+      "flag": "BUYER",
+      "capabilities": [
+        "YiliWMj",
+        "DmIB2n0",
+        "QCVJu0a",
+        "_byDibm"
+      ],
+      "id": "7PR87Dk"
+    },
+    {
+      "name": "Tremplate PR",
+      "flag": "BUYER",
+      "capabilities": [
+        "YiliWMj",
+        "DmIB2n0",
+        "QCVJu0a",
+        "_byDibm"
+      ],
+      "id": "YAjzLh2"
+    },
+    {
+      "name": "Profile",
+      "flag": "BUYER",
+      "capabilities": [
+        "YiliWMj",
+        "DmIB2n0",
+        "QCVJu0a",
+        "_byDibm"
+      ],
+      "id": "T-mY8Z3"
+    },
+    {
+      "name": "Setting",
+      "flag": "BUYER",
+      "capabilities": [
+        "YiliWMj",
+        "DmIB2n0",
+        "QCVJu0a",
+        "_byDibm"
+      ],
+      "id": "oiGpj5l"
+    }
+  ],
+  "status": [
+    {
+      "name": "Open",
+      "id": "YiliWMj"
+    },
+    {
+      "name": "Submit",
+      "id": "_byDibm"
+    },
+    {
+      "name": "Approve",
+      "id": "DmIB2n0"
+    },
+    {
+      "name": "Reject",
+      "id": "QCVJu0a"
+    },
+    {
+      "name": "Pick & Pack",
+      "id": "lxyA7Xo"
+    },
+    {
+      "name": "RTS",
+      "id": "MVeSK7W"
+    },
+    {
+      "name": "Status",
+      "id": "ozavvbx"
+    }
+  ],
+  "configstatus": [
+    {
+      "name": "Open to Submit",
+      "current": "Open",
+      "next": [
+        {
+          "id": "_byDibm",
+          "name": "Submit"
+        }
+      ],
+      "id": "D-6CDDf"
+    },
+    {
+      "name": "Submit to Approve, Reject",
+      "current": "Submit",
+      "next": [
+        {
+          "id": "DmIB2n0",
+          "name": "Approve"
+        },
+        {
+          "id": "QCVJu0a",
+          "name": "Reject"
+        }
+      ],
+      "id": "C2aetOd"
+    },
+    {
+      "name": "Open to Status",
+      "current": "Open",
+      "next": [
+        {
+          "id": "_byDibm",
+          "name": "Submit"
+        }
+      ],
+      "id": "sIkSRjK"
+    },
+    {
+      "name": "Status A",
+      "current": "Approve",
+      "next": [
+        {
+          "id": "DmIB2n0",
+          "name": "Approve"
+        }
+      ],
+      "id": "gajmep4"
+    }
+  ],
+  "payment-terms": [
+    {
+      "name": "1 Weeks",
+      "id": 1
+    },
+    {
+      "name": "2 Weeks",
+      "id": 2
+    },
+    {
+      "name": "3 Weeks",
+      "id": 3
+    },
+    {
+      "name": "1 Month",
+      "id": 4
+    },
+    {
+      "name": "3 Months",
+      "id": 5
+    },
+    {
+      "name": "6 Months",
+      "id": 8
+    },
+    {
+      "name": "COD",
+      "id": 9
+    }
+  ],
+  "legal-document": [
+    {
+      "title": "Nomor Pokok Wajib Pajak",
+      "short_title": "npwp",
+      "id": "asdfadf"
+    },
+    {
+      "title": "Surat Ijin Usaha Perusahaan",
+      "short_title": "siup",
+      "id": "6Oux9qQ"
+    }
+  ],
+  "company-type": [
+    {
+      "name": "CV",
+      "legal_doc": [
+        "6Oux9qQ",
+        "asdfadf"
+      ],
+      "id": "4DTFH-A"
+    },
+    {
+      "name": "Prima",
+      "legal_doc": [
+        "6Oux9qQ"
+      ],
+      "id": "fsb92u1"
+    },
+    {
+      "name": "PT",
+      "legal_doc": [
+        "asdfadf"
+      ],
+      "id": "0s9s06R"
+    }
+  ],
+  "user-superadmin": [
+    {
+      "id": "jhadfad",
+      "name": "John Doe",
+      "email": "johndoe@gmail.com",
+      "flag": "BUYER",
+      "role": "superadmin",
+      "status": "Active",
+      "verified": false
+    }
+  ],
+  "vendor-category": [
+    {
+      "name": "Hotel",
+      "id": "asdfadf1"
+    },
+    {
+      "name": "FnB",
+      "id": "hGVuV9B"
+    }
+  ],
+  "buyer-category": [
+    {
+      "name": "Hotel",
+      "id": "asdfadf1"
+    },
+    {
+      "name": "FnB",
+      "id": "hGVuV9B"
+    }
+  ]
+}

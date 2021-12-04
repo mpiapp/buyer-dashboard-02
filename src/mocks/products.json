@@ -1,0 +1,217 @@
+[
+    {
+        "_id": "asdfaftsgasdgasdfaeasdgasdfa",
+        "vendor_id": "12",
+        "vendor_name" : "Heaney - Lind",
+        "name": "Handmade Frozen Sausages",
+        "description": "Boston's most advanced compression wear technology increases muscle oxygenation, stabilizes active muscles",
+        "SKU": "LSNDKSH2123123",
+        "slug_product": "product-abd-101",
+        "brand": "Wine",
+        "category_id": "12",
+        "retail_price": 120000,
+        "discount":10,
+        "discount_price": 12000,
+        "images_product": ["https://agweasfasd.com"],
+        "reported_times":0,
+        "warehouse_id": "asdfasdfasewwe",
+        "storage": {
+            "rack": "2",
+            "bin": "3",
+            "level": "4"
+        },
+        "dimension": {
+            "width": 23,
+            "length": 23,
+            "height": 23,
+            "weight": 23
+        },
+        "status": "DRAFT",
+        "measurement_id": "asdfasdfa",
+        "stock": 300,
+        "minimum_order_quantity": 21,
+        "sub_products": [
+            {
+                "sub_product_id": "asdfasdfasdf",
+                "slug_sub_product": "asdfasdfa",
+                "variance": 123,
+                "image_sub_product": ["asdfadfadf"],
+                "made_date": "12/12/2022",
+                "expired_date": "12/12/2022",
+                "quantity": ""
+            }
+        ]
+    },
+    {
+        "_id": "asdfaftsgasdgasdfaeasdgasdfa",
+        "vendor_id": "12",
+        "vendor_name" : "Heaney - Lind",
+        "name": "Intelligent Wooden Fish",
+        "description": "Ergonomic executive chair upholstered in bonded black leather and PVC padded seat and back for all-day comfort and support",
+        "SKU": "LSNDKSH2123123",
+        "slug_product": "product-abd-200",
+        "brand": "Wine",
+        "category_id": "12",
+        "retail_price": 320000,
+        "discount":10,
+        "discount_price": 32000,
+        "images_product": ["https://agweasfasd.com"],
+        "reported_times":0,
+        "warehouse_id": "asdfasdfasewwe",
+        "storage": {
+            "rack": "2",
+            "bin": "3",
+            "level": "4"
+        },
+        "dimension": {
+            "width": 23,
+            "length": 23,
+            "height": 23,
+            "weight": 23
+        },
+        "status": "DRAFT",
+        "measurement_id": "asdfasdfa",
+        "stock": 300,
+        "minimum_order_quantity": 21,
+        "sub_products": [
+            {
+                "sub_product_id": "asdfasdfasdf",
+                "slug_sub_product": "asdfasdfa",
+                "variance": 123,
+                "image_sub_product": ["asdfadfadf"],
+                "made_date": "12/12/2022",
+                "expired_date": "12/12/2022",
+                "quantity": ""
+            }
+        ]
+    },
+    {
+        "_id": "asdfaftsgasdgasdfaeasdgasdfa",
+        "vendor_id": "12",
+        "vendor_name" : "Lehner - Grady",
+        "name": "Small Fresh Hat",
+        "description": "The beautiful range of Apple Naturalé that has an exciting mix of natural ingredients. With the Goodness of 100% Natural Ingredients",
+        "SKU": "LSNDKSH2123123",
+        "slug_product": "product-abd-200",
+        "brand": "Wine",
+        "category_id": "12",
+        "retail_price": 220000,
+        "discount":10,
+        "discount_price": 22000,
+        "images_product": ["https://agweasfasd.com"],
+        "reported_times":0,
+        "warehouse_id": "asdfasdfasewwe",
+        "storage": {
+            "rack": "2",
+            "bin": "3",
+            "level": "4"
+        },
+        "dimension": {
+            "width": 23,
+            "length": 23,
+            "height": 23,
+            "weight": 23
+        },
+        "status": "DRAFT",
+        "measurement_id": "asdfasdfa",
+        "stock": 300,
+        "minimum_order_quantity": 21,
+        "sub_products": [
+            {
+                "sub_product_id": "asdfasdfasdf",
+                "slug_sub_product": "asdfasdfa",
+                "variance": 123,
+                "image_sub_product": ["asdfadfadf"],
+                "made_date": "12/12/2022",
+                "expired_date": "12/12/2022",
+                "quantity": ""
+            }
+        ]
+    },
+    {
+        "_id": "asdfaftsgasdgasdfaeasdgasdfa",
+        "vendor_id": "12",
+        "vendor_name" : "Brakus - Reynolds",
+        "name": "Awesome Rubber Chicken",
+        "description": "Ergonomic executive chair upholstered in bonded black leather and PVC padded seat and back for all-day comfort and support",
+        "SKU": "LSNDKSH2123123",
+        "slug_product": "product-abd-200",
+        "brand": "Wine",
+        "category_id": "12",
+        "retail_price": 320000,
+        "discount":10,
+        "discount_price": 32000,
+        "images_product": ["https://agweasfasd.com"],
+        "reported_times":0,
+        "warehouse_id": "asdfasdfasewwe",
+        "storage": {
+            "rack": "2",
+            "bin": "3",
+            "level": "4"
+        },
+        "dimension": {
+            "width": 23,
+            "length": 23,
+            "height": 23,
+            "weight": 23
+        },
+        "status": "DRAFT",
+        "measurement_id": "asdfasdfa",
+        "stock": 300,
+        "minimum_order_quantity": 21,
+        "sub_products": [
+            {
+                "sub_product_id": "asdfasdfasdf",
+                "slug_sub_product": "asdfasdfa",
+                "variance": 123,
+                "image_sub_product": ["asdfadfadf"],
+                "made_date": "12/12/2022",
+                "expired_date": "12/12/2022",
+                "quantity": ""
+            }
+        ]
+    },
+    {
+        "_id": "asdfaftsgasdgasdfaeasdgasdfa",
+        "vendor_id": "12",
+        "vendor_name" : "Brakus - Reynolds",
+        "name": "Gorgeous Steel Bike",
+        "description": "The beautiful range of Apple Naturalé that has an exciting mix of natural ingredients. With the Goodness of 100% Natural Ingredients",
+        "SKU": "LSNDKSH2123123",
+        "slug_product": "product-abd-200",
+        "brand": "Wine",
+        "category_id": "12",
+        "retail_price": 220000,
+        "discount":10,
+        "discount_price": 22000,
+        "images_product": ["https://agweasfasd.com"],
+        "reported_times":0,
+        "warehouse_id": "asdfasdfasewwe",
+        "storage": {
+            "rack": "2",
+            "bin": "3",
+            "level": "4"
+        },
+        "dimension": {
+            "width": 23,
+            "length": 23,
+            "height": 23,
+            "weight": 23
+        },
+        "status": "DRAFT",
+        "measurement_id": "asdfasdfa",
+        "stock": 300,
+        "minimum_order_quantity": 21,
+        "sub_products": [
+            {
+                "sub_product_id": "asdfasdfasdf",
+                "slug_sub_product": "asdfasdfa",
+                "variance": 123,
+                "image_sub_product": ["asdfadfadf"],
+                "made_date": "12/12/2022",
+                "expired_date": "12/12/2022",
+                "quantity": ""
+            }
+        ]
+    }
+]

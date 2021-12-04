@@ -1,0 +1,218 @@
+body {
+    font-family: "Roboto", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+.global-container {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.container-height {
+    margin-top: 20px;
+    padding-top: 40px;
+    min-height: 76vh;
+    margin-bottom: 50px;
+    h1 {
+        color: #39d059;
+    }
+}
+
+.container-footer {
+    width: 100%;
+}
+
+.copyright-text {
+    text-align: center;
+    color: #092c4c;
+}
+
+.error-p {
+    color: #d43232;
+    padding-left: 5px;
+    padding-top: 0px;
+    font-size: 13px;
+}
+
+.box-modal-create {
+    min-height: 500px;
+    margin-bottom: 20px;
+    padding: 15px;
+}
+
+.box-modal-modules {
+    min-height: 500px;
+    margin-bottom: 20px;
+    padding: 15px;
+}
+
+#select-style-cat {
+    z-index: 50 !important;
+}
+
+#select-style-type {
+    z-index: 40 !important;
+}
+
+#select-style-province {
+    z-index: 30 !important;
+}
+
+#select-style-city {
+    z-index: 20 !important;
+}
+
+#select-style-district {
+    z-index: 10 !important;
+}
+
+body {
+    font-family: sans-serif;
+    // padding: 1em;
+  }
+  
+  .ais-SearchBox {
+    margin: 1em 0;
+  }
+  
+  .ais-Pagination {
+    margin-top: 1em;
+  }
+  
+  .left-panel {
+    float: left;
+  }
+  
+  .right-panel {
+    margin-left: 290px;
+  }
+
+//   .search-bar {
+//     display: flex;
+//     justify-content: center;
+//     width: 100%;
+    
+//   }
+
+//   input {
+//     width: 100%;
+//     border: none;
+//     border-radius: 0.5em;
+//     padding: 15px;
+//     background-color: #ccc;
+//     color: #092c4c;
+// }
+
+//   .ais-SearchBox-submit {
+//     width: 100px;
+//     padding: 5px;
+//     color: #c4c4c4;
+//     display: none;
+//   }
+//   .ais-SearchBox-reset {
+//     display: none;
+//   }
+  
+//   .ais-InstantSearch {
+//     // max-width: 960px;
+//     width: 100%;
+//     // border: 1px solid red;
+//     overflow: hidden;
+//     margin: 0 auto;
+//   }
+  
+//   .ais-Hits-item {
+//     margin-bottom: 1em;
+//     width: calc(50% - 1rem);
+//   }
+  
+//   .ais-Hits-item img {
+//     margin-right: 1em;
+//   }
+  
+  .hit-name {
+    padding-top: 16px;
+    h4 {
+        font-size: 15px;
+        min-height: 50px;
+        font-weight: 500;
+    }
+  }
+
+  .hit-vendor {
+      p {
+        font-weight: bold;
+        font-size: 15px;
+        padding-bottom: 5px;
+        text-decoration: underline;
+      }
+  }
+  .hit-price {
+      font-size: 16px;
+      font-weight: 600;
+      h3 {
+          color: #c70000;
+          font-size: 17px;
+      }
+      h4 {
+          text-decoration: line-through;
+          font-size: 17px;
+      }
+  }
+  
+  .hit-description {
+    color: #888;
+    font-size: 13px;
+    padding-bottom: 10px;
+  }
+
+  .ais-SearchBox-input {
+      height: 40px;
+  }
+  
+
+  .content-search {
+    //   margin-top: 10px;
+      position: relative;
+      .img-product {
+          padding: 5px;
+          display: flex;
+          justify-content: center;
+          img {
+              width: 130px;
+              height: 130px;
+          }
+          
+      }
+      .badge-discount {
+        //   border: 1px solid red;
+        background-color: red;
+        width: fit-content;
+        position: absolute;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 4px;
+        font-size: 13px;
+        padding: 3px;
+
+      }
+  }
+
+  .ais-ClearRefinements {
+      margin-bottom: 15px;
+  }
+
+  .button-card {
+      padding-top: 10px;
+      width: 100%;
+  }
