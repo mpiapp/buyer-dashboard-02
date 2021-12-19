@@ -17,7 +17,7 @@ export const sendEmail = createAsyncThunk(
         email : value.email,
     }
     try {
-        const response : any = await Axios.post(`${process.env.REACT_APP_API_URL_USERS}/vendor/change-password`, body)
+        const response : any = await Axios.post(`${process.env.REACT_APP_API_SERVER}/vendor/change-password`, body)
         if(response) {
           return response.data.message;
         }

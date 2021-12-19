@@ -2,15 +2,16 @@ import { Box } from '@mui/system'
 import { Stack } from '@mui/material';
 import BreadCrumbs from '../../../../components/BreadCrumbs'
 import AlgoliaSearch from '../../../../components/AlgoliaSearch';
-import CartPurchaseRequest from '../../../../components/CartPurchaseRequest';
-// import { useDispatch } from 'react-redux';
-// import { addToLocalDBCarts } from './reducers/createPurchaseRequestReducers';
+import CartTemplates from '../components/CartTemplatest';
+import { addToLocalDBTemplate } from './reducers/createNewTemplateReducers';
+import { useDispatch } from 'react-redux';
 
 function CreateNewTemplate() {
-    // const dispatch = useDispatch()
+    const dispatch = useDispatch()
+   
     
     const addToCart = ( value : any) => {
-        // dispatch(addToLocalDBCarts(value))
+        dispatch(addToLocalDBTemplate(value))
     }
     
     return (
@@ -25,7 +26,7 @@ function CreateNewTemplate() {
                 <Box>
                     <h2>Create New Template</h2>
                 </Box>
-                <CartPurchaseRequest/>
+                <CartTemplates/>
             </Stack>
             <Stack pt={3} >
                 <AlgoliaSearch

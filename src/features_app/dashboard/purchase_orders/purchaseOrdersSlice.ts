@@ -3,7 +3,7 @@ import swal from 'sweetalert'
 import {
   IStatePurchaseOrders
 } from './purchaseOrdersTypes'
-import { getPurchaseOrdersData, postProofDownPayment } from './reducers/purchaseOrdersReducers';
+import { getPurchaseOrdersData, postApprovalReject, postGoodReceiptNote, postProofDownPayment } from './reducers/purchaseOrdersReducers';
 
 
 const initialState: IStatePurchaseOrders = {
@@ -13,6 +13,10 @@ const initialState: IStatePurchaseOrders = {
   loading : false,
   error : null,
   error_proof : null,
+  item_pick : false,
+  loading_item_pick: false,
+  grn : false,
+  loading_grn: false,
 };
 
 export const getPurchaseOrders = createSlice({
@@ -32,7 +36,7 @@ export const getPurchaseOrders = createSlice({
       .addCase(getPurchaseOrdersData.rejected, (state, action : any) => {
         state.loading = false;
         state.error = action.payload; 
-        swal("Error", `${action.payload.message}`, 'error')
+        swal("Error", `${action.payload}`, 'error')
       })
       // post proof
       .addCase(postProofDownPayment.pending, (state) => {
@@ -45,7 +49,40 @@ export const getPurchaseOrders = createSlice({
       .addCase(postProofDownPayment.rejected, (state, action : any) => {
         state.loading_proof = false;
         state.error_proof = action.payload; 
-        swal("Error", `${action.payload.message}`, 'error')
+        swal("Error", `${action.payload}`, 'error')
+      })
+      // post approval or reject item
+      .addCase(postApprovalReject.pending, (state) => {
+        state.loading_item_pick = true;
+      })
+      .addCase(postApprovalReject.fulfilled, (state, action:any) => {
+        state.loading_item_pick = false;
+        state.item_pick = action.payload.data;
+        swal("Success", `${action.payload.message}`, 'success')
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000);
+      })
+      .addCase(postApprovalReject.rejected, (state, action : any) => {
+        state.loading_item_pick = false;
+        swal("Error", `${action.payload}`, 'error')
+      })
+       // post grn
+       .addCase(postGoodReceiptNote.pending, (state) => {
+        state.loading_grn = true;
+      })
+      .addCase(postGoodReceiptNote.fulfilled, (state, action:any) => {
+        state.loading_grn = false;
+        state.grn = action.payload.data;
+        swal("Success", `${action.payload.message}`, 'success')
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000);
+
+      })
+      .addCase(postGoodReceiptNote.rejected, (state, action : any) => {
+        state.loading_grn = false;
+        swal("Error", `${action.payload}`, 'error')
       })
   },
 });

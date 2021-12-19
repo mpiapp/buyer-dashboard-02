@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import * as React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
@@ -38,6 +38,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import logo from '../assets/img/logo.png'
+import { userCredentials } from '../utilities/config';
+import axios from 'axios';
+import swal from 'sweetalert';
+import { CircularProgress } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -48,6 +52,9 @@ interface Props {
 const NavDashboard = (props: Props) => {
     const auth = useSelector((state : RootState) => state.login )
     
+    const [feedbackValue, setFeedbackValue] = useState("");
+    const [loading, setLoading] = useState(false);
+
     const history = useHistory()
     const { window } = props
 
@@ -86,6 +93,33 @@ const NavDashboard = (props: Props) => {
     const onClickSignOut = () : void => {
         localStorage.clear()
         history.go(0)
+    }
+
+    const onClickSubmit = (e : any) => {
+        e.preventDefault()
+        let data_feedback = {
+            name : userCredentials.fullname,
+            company_name : userCredentials.company_code,
+            feedback : feedbackValue
+        }
+        setLoading(true)
+        setTimeout(async() => {
+            try {
+                const response : any = await axios.post(`${process.env.REACT_APP_API_SERVER}/feedback`, data_feedback)
+                if(response.data.errors === null) {
+                    let message = response.data.message
+                    handleCloseDialog()
+                    swal("Success", `${message}`, 'success')
+                    setLoading(false)
+                } else {
+                    swal("Error", `${response.data.message}`, 'error')
+                    setLoading(false)
+                }
+              } catch (err : any) {
+                swal("Error", `${err}`, 'error')
+                setLoading(false)
+            }
+        }, 1500);
     }
 
   const drawer = (
@@ -216,26 +250,32 @@ const NavDashboard = (props: Props) => {
         </div>
 
         <Dialog open={openDialog} onClose={handleCloseDialog}>
-            <DialogTitle>Feedback</DialogTitle>
-            <DialogContent>
-            <DialogContentText>
-                Give Feedback to us to make this platform much more better!
-            </DialogContentText>
-            <TextField
-                autoFocus
-                margin="normal"
-                id="name"
-                label="Enter your feedback"
-                multiline
-                rows={5}
-                fullWidth
-                variant="outlined"
-            />
-            </DialogContent>
-            <DialogActions>
-            <Button onClick={handleCloseDialog} color="error">Cancel</Button>
-            <Button onClick={handleCloseDialog} variant="contained">Submit</Button>
-            </DialogActions>
+            <form onSubmit={onClickSubmit}>
+                <DialogTitle>Feedback</DialogTitle>
+                <DialogContent>
+                <DialogContentText>
+                    Give Feedback to us to make this platform much more better!
+                </DialogContentText>
+                <TextField
+                    autoFocus
+                    margin="normal"
+                    id="name"
+                    label="Enter your feedback"
+                    onChange={(e) => setFeedbackValue(e.target.value)}
+                    multiline
+                    rows={5}
+                    fullWidth
+                    variant="outlined"
+                    required
+                />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="error">Cancel</Button>
+                    <Button type="submit" variant="contained">
+                        { loading ? <CircularProgress color='inherit' size={20} /> : "Submit" }
+                    </Button>
+                </DialogActions>
+            </form>
         </Dialog>
 
     </div>

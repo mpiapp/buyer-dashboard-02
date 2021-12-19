@@ -6,6 +6,7 @@ export interface IDataRowPurchaseRequest {
     total: number;
     lastStatus: string;
     selector? : any;
+    _id : string
 }
 
 export interface ICartPurchaseRequests {
@@ -21,7 +22,8 @@ export interface ICartPurchaseRequests {
     error_save: any;
     submit : boolean,
     loading_submit : boolean,
-    error_submit : any
+    error_submit : any,
+    success_reset : boolean
 }
 
 export interface IProductItem {

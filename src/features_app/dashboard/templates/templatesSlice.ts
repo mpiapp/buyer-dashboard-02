@@ -3,7 +3,7 @@ import swal from 'sweetalert'
 // import {
 //   IStatePurchaseRequest
 // } from './purchaseRequestTypes'
-import { getPurchaseRequestData, removePurchaseRequestData } from './reducers/purchaseRequestReducers';
+import { getTemplatesData, removeTemplatesData, } from './reducers/templatesReducers';
 
 
 const initialState: any = {
@@ -14,37 +14,37 @@ const initialState: any = {
   loading_remove: false,
 };
 
-export const getPurchaseRequest = createSlice({
-  name: 'purchase-request',
+export const getTemplates = createSlice({
+  name: 'templates',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       // get purchase request
-      .addCase(getPurchaseRequestData.pending, (state) => {
+      .addCase(getTemplatesData.pending, (state) => {
         state.loading = true;
         state.remove = false;
       })
-      .addCase(getPurchaseRequestData.fulfilled, (state, action:any) => {
+      .addCase(getTemplatesData.fulfilled, (state, action:any) => {
         state.loading = false;
         state.data = action.payload.data;
       })
-      .addCase(getPurchaseRequestData.rejected, (state, action : any) => {
+      .addCase(getTemplatesData.rejected, (state, action : any) => {
         state.loading = false;
         state.error = action.payload; 
         swal("Error", `${action.payload.message}`, 'error')
       })
 
       // remove purchase request
-      .addCase(removePurchaseRequestData.pending, (state) => {
+      .addCase(removeTemplatesData.pending, (state) => {
         state.loading_remove = true;
       })
-      .addCase(removePurchaseRequestData.fulfilled, (state, action:any) => {
+      .addCase(removeTemplatesData.fulfilled, (state, action:any) => {
         state.loading_remove = false;
         state.remove = action.payload.data;
         swal("Success", `${action.payload.message}`, 'success')
       })
-      .addCase(removePurchaseRequestData.rejected, (state, action : any) => {
+      .addCase(removeTemplatesData.rejected, (state, action : any) => {
         state.loading_remove = false;
         swal("Error", `${action.payload.message}`, 'error')
       })
@@ -52,4 +52,4 @@ export const getPurchaseRequest = createSlice({
   },
 });
 
-export default getPurchaseRequest.reducer;
+export default getTemplates.reducer;

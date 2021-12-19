@@ -1,26 +1,37 @@
 import { useState, useEffect } from 'react';
-import { Paper, Button, Stack, CircularProgress} from '@mui/material';
-import imgemptycart from '../assets/img/icon/empty_cart.svg'
+import { Paper, Button, Stack, CircularProgress, TextField} from '@mui/material';
+import imgemptycart from '../../../../assets/img/icon/empty_cart.svg'
 import { Box } from '@mui/system'
 import Badge from '@mui/material/Badge';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useSelector, useDispatch } from 'react-redux'
-import { RootState } from '../app/store';
-import { getLocalDBCarts, resetCart, savePurchaseRequest, submitPurchaseRequest } from '../features_app/dashboard/purchase_requests/create/reducers/createPurchaseRequestReducers';
+import { RootState } from '../../../../app/store';
+import { 
+  getLocalDBTemplate, 
+  resetCartTemplate, 
+  saveTemplate,
+} from '../create/reducers/createNewTemplateReducers';
 import Drawer from '@mui/material/Drawer';
-import TableItemCarts from './TableItemCarts';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
-import SnackBarAlert from './SnackBarAlert';
+import SnackBarAlert from './../../../../components/SnackBarAlert';
+import TableItemTemplate from './TableItemTemplate';
+import { useLocation } from 'react-router-dom';
 
-
-const CartPurchaseRequest : React.FC<any> = () => {
+const CartTemplates : React.FC<any> = () => {
   const dispatch = useDispatch()
+  
+  const store_carts = useSelector((store : RootState) => store.carts_template) 
+  const location = useLocation()
+  const data_location : any = location.state
 
-  const store_carts = useSelector((store : RootState) => store.carts) 
+  // console.log(data_location, 'data location template')
+  // console.log(store_carts,'store carts')
+
   const [initialSaved, setInitialSaved] = useState<any>({});
 
   // console.log(initialSaved, 'initial saved')
+  const [templateName, setTemplateName] = useState("");
   const [openSnackBar, setopenSnackBar] = useState(false);
   const [dataCartProps, setDataCartProps] = useState<any[]>([]);
   const [state, setState] = useState(false);
@@ -55,14 +66,16 @@ const CartPurchaseRequest : React.FC<any> = () => {
   }
 
   useEffect(() => {
-    dispatch(getLocalDBCarts())
+    dispatch(getLocalDBTemplate())
     setInitialIDCart()
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     if(store_carts.success_save) {
-      setInitialIDCart()
+      setTimeout(() => {
+        window.location.reload()
+      }, 1500);
     }
   }, [store_carts.success_save]);
 
@@ -78,7 +91,7 @@ const CartPurchaseRequest : React.FC<any> = () => {
     if(store_carts.success_add) {
       setopenSnackBar(true)
       updateInitialIDCart()
-      dispatch(getLocalDBCarts())
+      dispatch(getLocalDBTemplate())
     }
     // eslint-disable-next-line
   }, [store_carts.success_add]);
@@ -86,17 +99,23 @@ const CartPurchaseRequest : React.FC<any> = () => {
   useEffect(() => {
     if(store_carts.success_reset) {
       setopenSnackBar(true)
-      dispatch(getLocalDBCarts())
+      dispatch(getLocalDBTemplate())
     }
     // eslint-disable-next-line
   }, [store_carts.success_reset]);
 
   useEffect(() => {
     if(store_carts.submit) {
-      dispatch(getLocalDBCarts())
+      dispatch(getLocalDBTemplate())
     }
     // eslint-disable-next-line
   }, [store_carts.submit]);
+
+  useEffect(() => {
+    if(data_location !== undefined) {
+      setTemplateName(data_location.data.name)
+    }
+  }, [data_location]);
 
   function sumTotalPrice (data : any) {
     const totalPriceALl = data.reduce((total : any, data : any) => {
@@ -110,6 +129,19 @@ const CartPurchaseRequest : React.FC<any> = () => {
       return total + data.quantity
     }, 0)
     return itemQuantity;
+  }
+
+  function onClickSaveTemplate(e:any) {
+    e.preventDefault()
+    
+    dispatch(saveTemplate({ 
+      value : dataCartProps,
+      total : sumTotalPrice(dataCartProps),
+      type : initialSaved.change,
+      template_name : templateName,
+      update : data_location !== undefined ? true : false,
+      id : data_location !== undefined ? data_location.data._id : null,
+    }))
   }
 
   return (
@@ -156,7 +188,7 @@ const CartPurchaseRequest : React.FC<any> = () => {
                         variant="contained" 
                         color="error" 
                         size="small" 
-                        onClick={() => dispatch(resetCart())}
+                        onClick={() => dispatch(resetCartTemplate())}
                     >
                         Reset Cart
                     </Button>
@@ -164,7 +196,7 @@ const CartPurchaseRequest : React.FC<any> = () => {
                 </Stack>
                 
                 <div className="content-cart">
-                    <TableItemCarts 
+                    <TableItemTemplate 
                       dataCartProps={dataCartProps}
                     />
                 </div>
@@ -174,36 +206,28 @@ const CartPurchaseRequest : React.FC<any> = () => {
                 <div className="total-cart">
                   <h2>Total Rp. {sumTotalPrice(dataCartProps).toLocaleString()}</h2>
                   <div className="right-button">
-                    <h6>Save as a template</h6>
-                    <Button 
-                      color="primary" variant="outlined" sx={{ mr:2 }}
-                      onClick={() => dispatch(savePurchaseRequest({
-                        value : dataCartProps,
-                        total : sumTotalPrice(dataCartProps),
-                        type : initialSaved.change,
-                      }))}
-                      disabled={initialSaved.saved ? true : false}
-                    >
-                      { store_carts.loading_save ? 
-                        <div className="loading-button"> 
-                          <p>Loading</p>  
-                          <CircularProgress size={20} />
-                        </div> : "Save Purchase Requests"
-                      }
-                    </Button>
-                    <Button 
-                      color="success" 
-                      variant="contained" 
-                      disabled={initialSaved.saved  ? false : true}
-                      onClick={() => dispatch(submitPurchaseRequest())}
-                    >
-                      { store_carts.loading_submit ? 
-                        <div className="loading-button"> 
-                          <p>Loading</p>  
-                          <CircularProgress size={20} />
-                        </div> : "Submit Purchase Requests" 
-                      }
-                    </Button>
+                    <form onSubmit={onClickSaveTemplate}>
+                      <TextField 
+                        label="Template Name"
+                        size="small"
+                        value={templateName}
+                        onChange={(e) => setTemplateName(e.target.value)}
+                        required
+                      />
+                      <Button 
+                        color="primary" 
+                        variant="outlined" sx={{ mr:2, ml : 2 }}
+                        type='submit'
+                        disabled={initialSaved.saved ? true : false}
+                      >
+                        { store_carts.loading_save ? 
+                          <div className="loading-button"> 
+                            <p>Loading</p>  
+                            <CircularProgress size={20} />
+                          </div> : "Save Template"
+                        }
+                      </Button>
+                    </form>
                   </div>
                 </div>
               </Paper>
@@ -227,4 +251,4 @@ const CartPurchaseRequest : React.FC<any> = () => {
 }
 
 
-export default CartPurchaseRequest;
+export default CartTemplates;

@@ -14,47 +14,46 @@ export const loginAction = createAsyncThunk(
             password : value.password,
         }
         try {
-            const response : any = await Axios.post(`${process.env.REACT_APP_API_URL_USERS}/buyer/login`, body)
-            if(response) {
-                let headers = {
-                    'Content-Type': 'application/json',
-                    'token': response.data.access_token
-                }
+            const response : any = await Axios.post(`${process.env.REACT_APP_API_SERVER}/user-buyer/login`, body)
+            if(response.data.errors === null) {
                 try {
-                    const profil : any = await Axios.post(`${process.env.REACT_APP_API_URL_USERS}/buyer/user-access`, {}, {
-                        headers: headers
-                    })
-                    if(profil) {
+                    const profil : any = await Axios.get(`${process.env.REACT_APP_API_SERVER}/user-buyer/${response.data.data.access_token}/access`)
+                    if(profil.data.errors === null) {
                         let data = {
-                            access_token : response.data.access_token,
-                            id_token : response.data.id_token, 
-                            expires_in : response.data.expires_in,
-                            email : profil.data.email,
-                            fullname : profil.data.fullname, 
-                            role : profil.data.role, 
-                            avatar : profil.data.avatar,
-                            auth_id : profil.data.auth_id,
-                            first_time : false,
+                            access_token : response.data.data.access_token,
+                            id_token : response.data.data.id_token, 
+                            expires_in : response.data.data.expires_in,
+                            email : profil.data.data.email,
+                            fullname : profil.data.data.fullname, 
+                            role : profil.data.data.role, 
+                            avatar : profil.data.data.avatar,
+                            auth_id : profil.data.data.auth_id,
+                            first_time : profil.data.data.isFirstTime,
                             login: true,
-                            buyerId : 'arisbuyerdummy2021',
-                            code : 'MPINDO'
+                            buyer_id : profil.data.data.buyer_id,
+                            company_code : profil.data.data.company_code,
+                            vendor_name : profil.data.data.vendor_name,
                         }
                         const saveToLocalStorage = crypto.AES.encrypt(JSON.stringify(data), `${process.env.REACT_APP_CRYPTO_SECRET}`).toString();
                         localStorage.setItem('_?credentials', saveToLocalStorage)
                         return data
+                    } else {
+                        return rejectWithValue(profil.data.message)
                     }
                 } catch (err : any) {
                     if (!err.profil) {
                         throw err
                     }
-                    return rejectWithValue(err.profil.data)
+                    return rejectWithValue(err.message)
                 }
+            } else {
+                return rejectWithValue(response.data.message.error_description)
             }
           } catch (err : any) {
             if (!err.response) {
               throw err
             }
-            return rejectWithValue(err.response.data)
+            return rejectWithValue(err.message)
         }
     }
   );

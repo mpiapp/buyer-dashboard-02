@@ -53,7 +53,7 @@ export const loginSlice = createSlice({
       .addCase(loginAction.rejected, (state, action : any) => {
         state.loading = false;
         state.error = action.payload; 
-        swal("Error", `${action.payload.message}`, 'error')
+        swal("Error", `${action.payload}`, 'error')
       })
   },
 });

@@ -17,22 +17,18 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { groupBy } from 'lodash'
 import { useDispatch } from 'react-redux';
 import { 
-    addQuantityProduct, 
-    removeVendorItems, 
-    removeItemProduct, 
-    removeQuantityProduct 
-} from '../features_app/dashboard/purchase_requests/create/reducers/createPurchaseRequestReducers';
+    addQuantityProductTemplate, 
+    removeItemProductTemplate, 
+    removeQuantityProductTemplate, 
+    removeVendorItemsTemplate 
+} from '../create/reducers/createNewTemplateReducers';
 
-const TableItemCarts : React.FC<any> = ({ dataCartProps }) => {
+const TableItemTemplate : React.FC<any> = ({ dataCartProps }) => {
 
     const dispatch = useDispatch()
 
-    // console.log(dataCartProps, 'data carts')
-
     const [groupCart, setGroupCart] = useState<any>([]);
     const [loaded, setLoaded] = useState(false);
-
-    // console.log(groupCart, 'carts')
 
     useEffect(() => {
         const proceedCart = () => {
@@ -71,7 +67,7 @@ const TableItemCarts : React.FC<any> = ({ dataCartProps }) => {
                                 variant="outlined" 
                                 color="error" 
                                 size="small" 
-                                onClick={() => dispatch(removeVendorItems({
+                                onClick={() => dispatch(removeVendorItemsTemplate({
                                     vendor_name : data.vendor_name
                                 }))}
                             >
@@ -112,7 +108,7 @@ const TableItemCarts : React.FC<any> = ({ dataCartProps }) => {
                                             <Box 
                                                 pr={1} 
                                                 style={{cursor: 'pointer'}}
-                                                onClick={() => dispatch(removeQuantityProduct({
+                                                onClick={() => dispatch(removeQuantityProductTemplate({
                                                     name : value.name,
                                                     discount_price : value.discount_price,
                                                     retail_price : value.retail_price
@@ -130,7 +126,7 @@ const TableItemCarts : React.FC<any> = ({ dataCartProps }) => {
                                             <Box 
                                                 pr={1} 
                                                 style={{cursor: 'pointer'}}
-                                                onClick={() => dispatch(addQuantityProduct({
+                                                onClick={() => dispatch(addQuantityProductTemplate({
                                                     name : value.name,
                                                     discount_price : value.discount_price,
                                                     retail_price : value.retail_price
@@ -148,7 +144,7 @@ const TableItemCarts : React.FC<any> = ({ dataCartProps }) => {
                                         <Box 
                                             pr={1} 
                                             style={{cursor: 'pointer'}} 
-                                            onClick={() => dispatch(removeItemProduct({
+                                            onClick={() => dispatch(removeItemProductTemplate({
                                                 name : value.name,
                                             }))}
                                         >
@@ -185,4 +181,4 @@ const TableItemCarts : React.FC<any> = ({ dataCartProps }) => {
     )
 }
 
-export default TableItemCarts
+export default TableItemTemplate

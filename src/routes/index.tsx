@@ -20,6 +20,7 @@ import Templates from '../features_app/dashboard/templates/Templates';
 import CreatePurchaseRequests from '../features_app/dashboard/purchase_requests/create/CreatePurchaseRequests';
 import CreateNewTemplate from '../features_app/dashboard/templates/create/CreateNewTemplate';
 import DetailPurchaseRequests from '../features_app/dashboard/purchase_requests/detail/DetailPurchaseRequests';
+import DetailTemplates from '../features_app/dashboard/templates/detail/DetailTemplates';
 
 function AppRoute() {
   return (
@@ -42,6 +43,7 @@ function AppRoute() {
           <DashboardLayout exact path="/dashboard/account" component={AccountPage} />
           <DashboardLayout exact path="/dashboard/templates" component={Templates} />
           <DashboardLayout exact path="/dashboard/create/template" component={CreateNewTemplate} />
+          <DashboardLayout exact path="/dashboard/detail/template" component={DetailTemplates} />
           <DashboardLayout exact path="/dashboard/finance" component={FinancePage} />
           <DashboardLayout exact path="/dashboard/message" component={ChatPage} />
           <DashboardLayout exact path="/dashboard/buyer-list" component={BuyerLists} />

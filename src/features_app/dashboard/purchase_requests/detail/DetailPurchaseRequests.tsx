@@ -25,9 +25,11 @@ import { RootState } from '../../../../app/store';
 
 
 function DetailPurchaseRequests() {
-    const location = useLocation()
     const dispatch = useDispatch()
+    const location = useLocation()
     const data_location : any = location.state
+
+    // console.log(data_location, 'data locations')
 
     const approve_store = useSelector((store : RootState) => store.approve_po) 
 
@@ -59,6 +61,7 @@ function DetailPurchaseRequests() {
                 name : userCredentials.fullname,
                 id : val,
                 note : note,
+                lastStatus : data_location.lastStatus
             }
             dispatch(approvePurchaseRequests(data_send))
         }
@@ -72,6 +75,7 @@ function DetailPurchaseRequests() {
                 name : userCredentials.fullname,
                 id : val,
                 note : note,
+                lastStatus : data_location.lastStatus
             }
             dispatch(rejectPurchaseRequests(data_send))
         }

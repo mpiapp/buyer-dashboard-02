@@ -11,16 +11,14 @@ import {
     Stack
 } from '@mui/material';
 
+const TableItemDetail : React.FC<any> = ({ data }) => {
 
-const TableItem : React.FC<any> = ({ data }) => {
-
-    // console.log(data, 'data')
-    function sumTotalPrice (data : any) {
-      const totalPriceALl = data.reduce((total : any, data : any) => {
-        return total + data.sub_total
-      }, 0)
-      return totalPriceALl;
-    }
+  function sumTotalPrice (data : any) {
+    const totalPriceALl = data.reduce((total : any, data : any) => {
+      return total + data.sub_total
+    }, 0)
+    return totalPriceALl;
+  }
 
   return (
     <Box>
@@ -28,13 +26,13 @@ const TableItem : React.FC<any> = ({ data }) => {
           <Table aria-label="simple table"  > 
               <TableHead>
                 <TableRow >
-                    <TableCell style={{fontWeight: 700, }}>SKU</TableCell>
-                    <TableCell style={{fontWeight: 700, }}>NAME</TableCell>
-                    <TableCell style={{fontWeight: 700,}}>RETAIL PRICE</TableCell>
+                    <TableCell style={{fontWeight: 700}}>SKU</TableCell>
+                    <TableCell style={{fontWeight: 700}}>NAME</TableCell>
+                    <TableCell style={{fontWeight: 700}}>RETAIL PRICE</TableCell>
                     <TableCell style={{fontWeight: 700}}>DISCOUNT</TableCell>
-                    <TableCell style={{fontWeight: 700, }}>DISCOUNT PRICE</TableCell>
+                    <TableCell style={{fontWeight: 700}}>DISCOUNT PRICE</TableCell>
                     <TableCell style={{fontWeight: 700}}>QTY</TableCell>
-                    <TableCell style={{fontWeight: 700,}}>SUB TOTAL</TableCell>
+                    <TableCell style={{fontWeight: 700}}>SUB TOTAL</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody >
@@ -77,4 +75,4 @@ const TableItem : React.FC<any> = ({ data }) => {
   );
 }
 
-export default TableItem
+export default TableItemDetail

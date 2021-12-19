@@ -9,12 +9,17 @@ import {
 } from '@mui/material';
 import { useForm } from "react-hook-form";
 import Select from 'react-select'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { UserFormSubmit } from '../stepRegisterTypes'
 import { ISelectOption } from '../../globalTypes'
-import { changeStep } from '../stepRegisterSlice'
+import { changeStep } from './stepFormSlice'
+import { postCompanyDetail } from '../reducers/stepRegisterReducers';
+import { RootState } from '../../../../app/store';
+import { userCredentials } from '../../../../utilities/config';
+import axios from 'axios'
+import swal from 'sweetalert';
 
 const validationSchema = yup
   .object({
@@ -28,8 +33,6 @@ const validationSchema = yup
     whatsapp: yup.number()
         .typeError('Phone Number is required')
         .required("Whatsapp is required"),
-    postcode: yup.string()
-        .required("Postcode is required"),
     street: yup.string()
         .required("Street is required"), 
   })
@@ -50,63 +53,17 @@ const FormCompanyDetail : React.FC<any> = ({
     });
 
     const dispatch = useDispatch()
+    const state_stepregister = useSelector((state : RootState) => state.step_register)
 
-    const [loading, setLoading] = useState(false);
-      
     // state for category company
-    const [optionsCategoryCompany] = useState<ISelectOption[]>([
-        { value: "Hotel", label: "Hotel" },
-        { value: "Restaurant", label: "Restaurant" },
-        { value: "Cafe", label: "Cafe" },
-    ]);
-    const [selectedCategoryCompany, setSelectedCategoryCompany] = useState<ISelectOption[]>([]);
+    const [optionsCategoryCompany, setOptionsCategoryCompany] = useState<ISelectOption[]>([]);
+    const [selectedCategoryCompany, setSelectedCategoryCompany] = useState<any>([]);
     const [errorCategoryCompany, setErrorCategoryCompany] = useState<boolean>(false);
 
     // state for type company
-    const [optionsTypeCompany] = useState<ISelectOption[]>([
-        { value: "PT", label: "PT" },
-        { value: "CV", label: "CV" },
-        { value: "UD", label: "UD" },
-    ]);
-    const [selectedTypeCompany, setSelectedTypeCompany] = useState<ISelectOption[]>([]);
+    const [optionsTypeCompany, setOptionsTypeCompany] = useState<ISelectOption[]>([]);
+    const [selectedTypeCompany, setSelectedTypeCompany] = useState<any>([]);
     const [errorTypeCompany, setErrorTypeCompany] = useState<boolean>(false);
-
-    // state for province
-    const [optionsProvince] = useState<ISelectOption[]>([
-        { value: "DKI Jakarta", label: "DKI Jakarta" },
-        { value: "Jawa Tengah", label: "Jawa Tengah" },
-        { value: "Sulawesi", label: "Sulawesi" },
-    ]);
-    const [selectedProvince, setSelectedProvince] = useState<ISelectOption[]>([]);
-    const [errorProvince, setErrorProvince] = useState<boolean>(false);
-
-    // state for city
-    const [optionsCity] = useState<ISelectOption[]>([
-        { value: "Jakarta Pusat", label: "Jakarta Pusat" },
-        { value: "Jakarta Selatan", label: "Jakarta Selatan" },
-        { value: "Jakarta Timur", label: "Jakarta Timur" },
-    ]);
-    const [selectedCity, setSelectedCity] = useState<ISelectOption[]>([]);
-    const [errorCity, setErrorCity] = useState<boolean>(false);
-
-    // state for District
-    const [optionsDistrict] = useState<ISelectOption[]>([
-        { value: "Tebet", label: "Tebet" },
-        { value: "Bukit Duri", label: "Bukit Duri" },
-        { value: "Matraman", label: "Matraman" },
-    ]);
-    const [selectedDistrict, setSelectedDistrict] = useState<ISelectOption[]>([]);
-    const [errorDistrict, setErrorDistrict] = useState<boolean>(false);
-
-    // state for SubDistrict
-    const [optionsSubDistrict] = useState<ISelectOption[]>([
-        { value: "Bukit Duri", label: "Bukit Duri" },
-        { value: "Manggarai", label: "Manggarai" },
-        { value: "Tebet", label: "Tebet" },
-    ]);
-    const [selectedSubDistrict, setSelectedSubDistrict] = useState<ISelectOption[]>([]);
-    const [errorSubDistrict, setErrorSubDistrict] = useState<boolean>(false);
-
 
     /* istanbul ignore next */
     const handleChangeTypeCompany = (value: any) : void => {
@@ -120,31 +77,6 @@ const FormCompanyDetail : React.FC<any> = ({
         setSelectedCategoryCompany(value)
     }
 
-    /* istanbul ignore next */
-    const handleChangeProvince = (value: any) : void => {
-        setErrorProvince(false)
-        setSelectedProvince(value)
-    }
-
-    /* istanbul ignore next */
-    const handleChangeCity = (value: any) : void => {
-        setErrorCity(false)
-        setSelectedCity(value)
-    }
-
-    /* istanbul ignore next */
-    const handleChangeDistrict = (value: any) : void => {
-        setErrorDistrict(false)
-        setSelectedDistrict(value)
-    }
-
-    /* istanbul ignore next */
-    const handleChangeSubDistrict = (value: any) : void => {
-        setErrorSubDistrict(false)
-        setSelectedSubDistrict(value)
-    }
-
-
     const checkError = () => {
         let error = true
         if(selectedCategoryCompany.length === 0) {
@@ -153,18 +85,6 @@ const FormCompanyDetail : React.FC<any> = ({
         } else if (selectedTypeCompany.length === 0) {
             setErrorTypeCompany(true)
             error = true
-        } else if (selectedProvince.length === 0) {
-            setErrorProvince(true)
-            error = true
-        } else if (selectedCity.length === 0) {
-            setErrorCity(true)
-            error = true
-        } else if (selectedDistrict.length === 0) {
-            setErrorDistrict(true)
-            error = true
-        } else if (selectedSubDistrict.length === 0) {
-            setErrorSubDistrict(true)
-            error = true
         } else {
             error = false
         }
@@ -172,73 +92,120 @@ const FormCompanyDetail : React.FC<any> = ({
     }
 
     const onSubmit = (data: UserFormSubmit): void => {
-        let dataOptions = {
-            company_category: selectedCategoryCompany,
+        let save_local = {
+            category: selectedCategoryCompany,
             type : selectedTypeCompany,
-            legalname : data.legalname,
-            aliasname : data.aliasname,
-            province : selectedProvince,
-            city : selectedCity,
-            district: selectedDistrict,
-            subdistrict: selectedSubDistrict,
-            postcode : data.postcode,
-            street : data.street,
-            phonenumber : data.phonenumber,
+            legal_name : data.legalname,
+            name : data.aliasname,
+            address : data.street,
+            phone : data.phonenumber,
             whatsapp : data.whatsapp,
             website : data.website,
             instagram : data.instagram,
             facebook : data.facebook,
             twitter : data.twitter
         }
+        let body_send  = {
+            _id: userCredentials.buyer_id,
+            category: selectedCategoryCompany.value,
+            type : selectedTypeCompany.label,
+            legal_name : data.legalname,
+            name : data.aliasname,
+            address : data.street,
+            phone : data.phonenumber,
+            whatsapp : data.whatsapp,
+            website : data.website,
+            instagram : data.instagram,
+            facebook : data.facebook,
+            twitter : data.twitter
+        }
+        localStorage.setItem('legal_doc_company', JSON.stringify(selectedTypeCompany.value))
         if(!checkError()) {
-            setLoading(true)
             if(profile) {
-                setTimeout(() => {
-                    setLoading(false)
-                    localStorage.setItem('company_detail', JSON.stringify(dataOptions))
-                }, 2000);
+                localStorage.setItem('company_detail', JSON.stringify(save_local))
+                dispatch(postCompanyDetail(body_send))
             } else {
-                setTimeout(() => {
-                    setLoading(false)
-                    dispatch(changeStep(1))
-                    localStorage.setItem('company_detail', JSON.stringify(dataOptions))
-                }, 2000);
+                dispatch(postCompanyDetail(body_send))
+                localStorage.setItem('company_detail', JSON.stringify(save_local))
             }
         }
     }
+
+    const getCompanyCategory = async () => {
+        try {
+            const response : any = await axios.get(`${process.env.REACT_APP_API_SERVER}/master/category`)
+            if(response.data.errors === null) {
+                let category = response.data.data
+                let array_category = []
+                for(let element of category) {
+                    array_category.push({
+                        label : element.category,
+                        value : element.category
+                    })
+                }
+                setOptionsCategoryCompany(array_category)
+            } else {
+                swal('Error', `${response.data.message}`, 'error')
+            }
+            
+        } catch (error) {
+            swal('Error', `${error}`, 'error')
+        }
+    }
+
+    const getCompanyType = async () => {
+        try {
+            const response : any = await axios.get(`${process.env.REACT_APP_API_SERVER}/master/type`)
+            if(response.data.errors === null) {
+                let type = response.data.data
+                let array_type = []
+                for(let element of type) {
+                    array_type.push({
+                        label : element.companyType,
+                        value : element.legalDoc
+                    })
+                }
+                setOptionsTypeCompany(array_type)
+            } else {
+                swal('Error', `${response.data.message}`, 'error')
+            }
+            
+        } catch (error) {
+            swal('Error', `${error}`, 'error')
+        }
+    }
+
+
+    useEffect(() => {
+        getCompanyCategory()
+        getCompanyType()
+    }, []);
+
+    useEffect(() => {
+        if(state_stepregister.company_detail) {
+            dispatch(changeStep(1))
+        }
+        // eslint-disable-next-line
+    }, [state_stepregister.company_detail])
 
     useEffect(() => {
         const local_data = localStorage.getItem('company_detail')
         const checkLocalData = () => {
             const data : any = local_data === null ? null : JSON.parse(local_data)
-            setValue('legalname', data.legalname)
-            setValue('aliasname', data.aliasname)
-            setValue('phonenumber', data.phonenumber)
+            setValue('legalname', data.legal_name)
+            setValue('aliasname', data.name)
+            setValue('phonenumber', data.phone)
             setValue('whatsapp', data.whatsapp)
-            setValue('street', data.street)
-            setValue('postcode', data.postcode)
+            setValue('street', data.address)
             setValue('instagram', data.instagram)
             setValue('facebook', data.facebook)
             setValue('twitter', data.twitter)
             setValue('website', data.website)
-            setSelectedCategoryCompany(data.company_category)
+            setSelectedCategoryCompany(data.category)
             setSelectedTypeCompany(data.type)
-            setSelectedProvince(data.province)
-            setSelectedDistrict(data.district)
-            setSelectedSubDistrict(data.subdistrict)
-            setSelectedCity(data.city)
         }
         if(local_data !== null) {
             checkLocalData()
-        }
-        // eslint-disable-next-line
-    }, []);
-
-    useEffect(() => {
-        const legalname = localStorage.getItem('legalname')
-        if(!legalname !== null) {
-            const data : any = legalname === null ? null : legalname
-            setValue('legalname', data)
         }
         // eslint-disable-next-line
     }, []);
@@ -247,7 +214,7 @@ const FormCompanyDetail : React.FC<any> = ({
         <div>
              <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={loading}
+                open={state_stepregister.loading_comp_detail}
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
@@ -270,6 +237,7 @@ const FormCompanyDetail : React.FC<any> = ({
                                             helperText={errors.legalname && errors.legalname.message}
                                             {...register('legalname', { required: true })}
                                             margin="dense"
+                                            defaultValue={userCredentials.vendor_name}
                                             fullWidth
                                             id="legalname"
                                             label="Company Legal Name"
@@ -302,13 +270,12 @@ const FormCompanyDetail : React.FC<any> = ({
                                             placeholder="Select Category Company"
                                             value={selectedCategoryCompany}
                                             isSearchable={true}
-                                            options={optionsCategoryCompany}
+                                            options={optionsCategoryCompany && optionsCategoryCompany}
                                             onChange={handleChangeCategoryCompany}
                                             id="select-style-cat"
                                         />
                                         </Box>
                                         { 
-                                        /* istanbul ignore next */
                                         errorCategoryCompany ? <div className="error-p"><p>Category is required</p></div> : null }
                                     </Grid>
                                     <Grid item xl={3} lg={4} xs={12}>
@@ -320,111 +287,16 @@ const FormCompanyDetail : React.FC<any> = ({
                                             placeholder="Select Type Company"
                                             value={selectedTypeCompany}
                                             isSearchable={true}
-                                            options={optionsTypeCompany}
+                                            options={optionsTypeCompany && optionsTypeCompany}
                                             onChange={handleChangeTypeCompany}
                                             id="select-style-type"
                                         />
                                         </Box>
                                         { 
-                                        /* istanbul ignore next */
                                         errorTypeCompany ? <div className="error-p"><p>Type is required</p></div> : null }
                                     </Grid>
                                     <Grid item xl={3} lg={4} xs={12}>
-                                        <Box pt={2}><h4>Province</h4></Box>
-                                    </Grid>
-                                    <Grid item xl={9} lg={8} xs={12}>
-                                        <Box pt={1} pb={1}>
-                                        <Select
-                                            placeholder="Select Province"
-                                            value={selectedProvince}
-                                            isSearchable={true}
-                                            options={optionsProvince}
-                                            onChange={handleChangeProvince}
-                                            id="select-style-province"
-                                        />
-                                        </Box>
-                                        { 
-                                        /* istanbul ignore next */
-                                        errorProvince ? <div className="error-p"><p>Province is required</p></div> : null }
-                                    </Grid>
-                                    <Grid item xl={3} lg={4} xs={12}>
-                                        <Box pt={2}><h4>City</h4></Box>
-                                    </Grid>
-                                    <Grid item xl={9} lg={8} xs={12}>
-                                        <Box pt={1} pb={1}>
-                                        <Select
-                                            placeholder="Select City"
-                                            value={selectedCity}
-                                            isSearchable={true}
-                                            options={optionsCity}
-                                            onChange={handleChangeCity}
-                                            id="select-style-city"
-                                        />
-                                        </Box>
-                                        { 
-                                        /* istanbul ignore next */
-                                        errorCity ? <div className="error-p"><p>City is required</p></div> : null }
-                                    </Grid>
-                                    <Grid item xl={3} lg={4} xs={12}>
-                                        <Box pt={2}><h4>District</h4></Box>
-                                    </Grid>
-                                    <Grid item xl={9} lg={8} xs={12}>
-                                        <Box pt={1} pb={1}>
-                                        <Select
-                                            placeholder="Select District"
-                                            value={selectedDistrict}
-                                            isSearchable={true}
-                                            options={optionsDistrict}
-                                            onChange={handleChangeDistrict}
-                                            id="select-style-district"
-                                        />
-                                        </Box>
-                                        { 
-                                        /* istanbul ignore next */
-                                        errorDistrict ? <div className="error-p"><p>District is required</p></div> : null }
-                                    </Grid>
-                                    <Grid item xl={3} lg={4} xs={12}>
-                                        <Box pt={2}><h4>Subdistrict</h4></Box>
-                                    </Grid>
-                                    <Grid item xl={9} lg={8} xs={12}>
-                                        <Box pt={1} pb={1}>
-                                        <Select
-                                            placeholder="Select Subdistrict"
-                                            value={selectedSubDistrict}
-                                            isSearchable={true}
-                                            options={optionsSubDistrict}
-                                            onChange={handleChangeSubDistrict}
-                                            id="select-style-subdistrict"
-                                        />
-                                        </Box>
-                                        { 
-                                        /* istanbul ignore next */
-                                        errorSubDistrict ? <div className="error-p"><p>Subdistrict is required</p></div> : null }
-                                    </Grid>
-                                   
-                                </Grid>
-                            </Grid>
-                            <Grid item xl={6} lg={6} xs={12}>
-                                <Grid container >
-                                    <Grid item xl={3} lg={4} xs={12}>
-                                        <Box pt={2}><h4>Post Code</h4></Box>
-                                    </Grid>
-                                    <Grid item xl={9} lg={8} xs={12}>
-                                        <TextField
-                                            error={!!errors.postcode}
-                                            helperText={errors.postcode && errors.postcode.message}
-                                            {...register('postcode', { required: true })}
-                                            margin="dense"
-                                            fullWidth
-                                            name="postcode"
-                                            label="Post Code"
-                                            type="text"
-                                            id="postcode"
-                                            size="small"
-                                        />
-                                    </Grid>
-                                    <Grid item xl={3} lg={4} xs={12}>
-                                        <Box pt={2}><h4>Street</h4></Box>
+                                        <Box pt={2}><h4>Address</h4></Box>
                                     </Grid>
                                     <Grid item xl={9} lg={8} xs={12}>
                                         <TextField
@@ -438,8 +310,14 @@ const FormCompanyDetail : React.FC<any> = ({
                                             type="text"
                                             id="street"
                                             size="small"
+                                            multiline
+                                            rows={3}
                                         />
                                     </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item xl={6} lg={6} xs={12}>
+                                <Grid container >
                                     <Grid item xl={3} lg={4} xs={12}>
                                         <Box pt={2}><h4>Phone Number</h4></Box>
                                     </Grid>

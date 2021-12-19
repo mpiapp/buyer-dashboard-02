@@ -9,21 +9,24 @@ export const registerAction = createAsyncThunk(
     async (value : InputState , { rejectWithValue }) => {
       try {
           const body = {
-            email : value.email,
-            password : value.password,
-            fullname : value.fullname,
-            buyer_id : "asdgadfe",
-            role_id: "00"
+            owner_email : value.email,
+            owner_password : value.password,
+            owner_name : value.fullname,
+            company_name : value.company_name,
           }
-          localStorage.setItem('fullname', value.fullname)
           localStorage.setItem('legalname', value.company_name)
-          const response = await Axios.post(`${process.env.REACT_APP_API_URL_USERS}/buyer/register`, body)
-          return response.data
+          const response : any = await Axios.post(`${process.env.REACT_APP_API_SERVER}/buyer/register`, body)
+          if(response.data.errors === null) {
+            // console.log(response, 'responsenn')
+            return response.data
+          } else {
+            return rejectWithValue(response.data.message)
+          }
         } catch (err : any) {
           if (!err.response) {
             throw err
           }
-          return rejectWithValue(err.response.data)
+          return rejectWithValue(err)
       }
     }
   );

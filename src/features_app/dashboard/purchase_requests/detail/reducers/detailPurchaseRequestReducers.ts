@@ -7,9 +7,10 @@ export const approvePurchaseRequests = createAsyncThunk(
         try {
             const body = {
                 name : value.name,
-                note : value.note
+                note : value.note,
+                lastStatus : value.lastStatus
             }
-            const response : any = await axios.put(`${process.env.REACT_APP_API_HOST}/purchase-request/approved/${value.id}`, body)
+            const response : any = await axios.put(`${process.env.REACT_APP_API_SERVER}/purchase-request/approved/${value.id}`, body)
             if(response) { 
                 return { data : true, message : "Success approve purchase request!", type : value.type }
             } else {
@@ -31,9 +32,10 @@ export const rejectPurchaseRequests = createAsyncThunk(
         try {
             const body = {
                 name : value.name,
-                note : value.note
+                note : value.note,
+                lastStatus : value.lastStatus
             }
-            const response : any = await axios.put(`${process.env.REACT_APP_API_HOST}/purchase-request/reject/${value.id}`, body)
+            const response : any = await axios.put(`${process.env.REACT_APP_API_SERVER}/purchase-request/reject/${value.id}`, body)
             if(response) { 
                 return { data : true, message : "Success rejected purchase request!" }
             } else {

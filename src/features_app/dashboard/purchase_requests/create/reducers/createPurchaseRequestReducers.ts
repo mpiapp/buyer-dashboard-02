@@ -33,7 +33,10 @@ export const addToLocalDBCarts = createAsyncThunk(
             "productId": value._id,
             "vendorId": value.vendor_id,
             "name": value.name,
+            "vendor": value.vendor,
             "vendor_name" : value.vendor_name,
+            "vendor_address" : value.vendor_address,
+            "vendor_phone" : value.vendor_phone,
             "sku": value.SKU,
             "slug": value.slug_product,
             "brand": value.brand,
@@ -49,7 +52,8 @@ export const addToLocalDBCarts = createAsyncThunk(
             "discount_price": value.discount_price,
             "quantity": 1,
             "sub_total" : value.discount >= 1 ? value.discount_price : value.retail_price,
-            "payment_term": value.payment_term
+            "payment_term": value.payment_term,
+            "note" : ""
         }
 
         const data_carts = await db.collection('db_local_CART').get()
@@ -57,6 +61,7 @@ export const addToLocalDBCarts = createAsyncThunk(
         if(data_carts.length === 0) {
             try {
                 const add_carts = await db.collection('db_local_CART').add(data_send)
+                localStorage.removeItem('id_cart_pr')
                 if(add_carts) {
                     return {success : true, message : "Success Added Item to Cart!"}
                 }
@@ -188,7 +193,7 @@ export const removeItemProduct = createAsyncThunk(
 export const removeVendorItems = createAsyncThunk(
     'carts/remove-allitemvendor', 
     async (value : any, { rejectWithValue }) => {
-        const data_carts = await db.collection('db_local_CART').get()
+        const data_carts = await db.collection('db_local_CART').get() 
         
         if(data_carts.find((element : any) => element.vendor_name === value.vendor_name)) {
             const vendorItems = remove(data_carts, function(obj : any) {
@@ -214,6 +219,7 @@ export const resetCart = createAsyncThunk(
         try {
             const removeDB = await db.collection('db_local_CART').delete()
             if(removeDB) {
+                localStorage.removeItem('id_cart_pr')
                 return {success : true, message : "Success Remove All Items!"}
             }
         } catch (error) {
@@ -226,83 +232,130 @@ export const resetCart = createAsyncThunk(
 export const savePurchaseRequest = createAsyncThunk(
     'save-pr', 
     async (value : any, { rejectWithValue }) => {
-
-        const convert_groupBy = Object.entries(groupBy(value.value, (item) => {
-            return [item['vendor_name'], item['vendorId']]
-        }));
-
-        // const convert_groupBy = Object.entries(groupBy(value.value, (item) => {
-        //     return [item['vendor_name'], item['vendorId'], item['discount'], item['sub_total'],]
-        // }));
-
-
-        let final_data : any = convert_groupBy.map(function(key) { 
-            let split_array = key[0].split(",")
-            return { 
-                vendor_name: split_array[0], 
-                down_payment : 100000,
-                // down_payment : Math.floor(((parseInt(split_array[2]) / 100 ) * parseInt(split_array[3]))),
-                vendorId: split_array[1],
-                packages : {
-                    items: key[1],
-                }
-            }; 
-        });
-
-        // console.log(final_data, 'final_data')
-
-        let body = {
-            code: userCredentials.code,
-            buyerId: userCredentials.buyerId,
-            addressId: '617364617364617364617344',
-            vendors: final_data,
-            total: value.total,
-            createdBy: userCredentials.fullname,
-        }
-
         try {
-            if(value.type) {
-                let local_id_cart : any = localStorage.getItem('id_cart_pr')
-                let id_cart = JSON.parse(local_id_cart)
+            const company : any = await axios.get(`${process.env.REACT_APP_API_SERVER}/buyer/detail?buyer_id=${userCredentials.buyer_id}`)
+            if(company.data.errors === null) {
+                let buyer_detail = company.data.data
 
-                let body_put = {
-                    id: id_cart.id,
-                    code: userCredentials.code,
-                    buyerId: userCredentials.buyerId,
-                    addressId: '617364617364617364617344',
+                // console.log(value, 'value')
+
+                const convert_groupBy : any = Object.entries(groupBy(value.value, (item) => {
+                    return JSON.stringify(item.vendor)
+                }));
+
+                let final_data : any = convert_groupBy.map(function(key : any) { 
+                    let split_array = key[0]
+                    return { 
+                        down_payment : 100000,
+                        vendor : JSON.parse(split_array),
+                        packages : {
+                            items: key[1],
+                        }
+                    }; 
+                });
+
+                // const convert_groupBy = Object.entries(groupBy(value.value, (item) => {
+                //     return [item['vendor_name'], item['vendorId'], item['vendor_address'], item['vendor_phone'],]
+                // }));
+        
+        
+                // let final_data : any = convert_groupBy.map(function(key) { 
+                //     let split_array = key[0].split(",")
+                //     return { 
+                //         down_payment : 100000,
+                //         vendor :{
+                //             "name": split_array[0],
+                //             "_id": split_array[1],
+                //             "address": split_array[2],
+                //             "phone": split_array[3]
+                //         },
+                //         packages : {
+                //             items: key[1],
+                //         }
+                //     }; 
+                // });
+
+                // console.log(final_data, 'final_data')
+        
+                let body = {
+                    code: buyer_detail.company_code,
+                    buyer: {
+                        "_id": buyer_detail._id,
+                        "name": buyer_detail.legal_name,
+                        "address": buyer_detail.address,
+                        "phone": buyer_detail.phone
+                    },
+                    address : {
+                        "address":  buyer_detail.address,
+                        "zip_code": 42161,
+                        "phone": buyer_detail.phone
+                    },
                     vendors: final_data,
                     total: value.total,
                     createdBy: userCredentials.fullname,
                 }
-                const response : any = await axios.put(`${process.env.REACT_APP_API_HOST}/purchase-request`, body_put)
-                if(response.data.errors === null) {
-                    let id_cart_pr = {
-                        saved: true,
-                        change: false,
-                        id : response.data.data._id
+        
+                // console.log(body, 'body')
+                let local_id_cart : any = localStorage.getItem('id_cart_pr')
+                let id_cart = JSON.parse(local_id_cart)
+
+                try {
+                    if(value.type && id_cart.id !== null) {        
+                        let body_put = {
+                            id: id_cart.id,
+                            code: buyer_detail.company_code,
+                            buyer: {
+                                "_id": buyer_detail._id,
+                                "name": buyer_detail.legal_name,
+                                "address": buyer_detail.address,
+                                "phone": buyer_detail.phone
+                            },
+                            address : {
+                                "address":  buyer_detail.address,
+                                "zip_code": 42161,
+                                "phone": buyer_detail.phone
+                            },
+                            vendors: final_data,
+                            total: value.total,
+                            createdBy: userCredentials.fullname,
+                        }
+                        const response : any = await axios.put(`${process.env.REACT_APP_API_SERVER}/purchase-request`, body_put)
+                        if(response.data.errors === null) {
+                            let id_cart_pr = {
+                                saved: true,
+                                change: false,
+                                id : response.data.data._id
+                            }
+                            localStorage.setItem('id_cart_pr', JSON.stringify(id_cart_pr))
+                            return {success : true, message : response.data.message}
+                        } else {
+                            return rejectWithValue(response.data.message)
+                        }
+                    } else {
+                        const response : any = await axios.post(`${process.env.REACT_APP_API_SERVER}/purchase-request`, body)
+                        if(response.data.errors === null) {
+                            let id_cart_pr = {
+                                saved: true,
+                                change: false,
+                                id : response.data.data._id
+                            }
+                            localStorage.setItem('id_cart_pr', JSON.stringify(id_cart_pr))
+                            return {success : true, message : response.data.message}
+                        } else {
+                            return rejectWithValue(response.data.message)
+                        }
                     }
-                    localStorage.setItem('id_cart_pr', JSON.stringify(id_cart_pr))
-                    return {success : true, message : response.data.message}
-                } else {
-                    return rejectWithValue(response.data.message)
+                } catch (error) {
+                    return rejectWithValue(error)
                 }
             } else {
-                const response : any = await axios.post(`${process.env.REACT_APP_API_HOST}/purchase-request`, body)
-                if(response.data.errors === null) {
-                    let id_cart_pr = {
-                        saved: true,
-                        change: false,
-                        id : response.data.data._id
-                    }
-                    localStorage.setItem('id_cart_pr', JSON.stringify(id_cart_pr))
-                    return {success : true, message : response.data.message}
-                } else {
-                    return rejectWithValue(response.data.message)
-                }
+                return rejectWithValue(company.data.message)
             }
         } catch (error) {
             return rejectWithValue(error)
         }
+
+        
     }
 )
 
@@ -312,11 +365,14 @@ export const submitPurchaseRequest = createAsyncThunk(
         let local_id_cart : any = localStorage.getItem('id_cart_pr')
         let id_cart = JSON.parse(local_id_cart)
         try {
-            const response : any = await axios.put(`${process.env.REACT_APP_API_HOST}/purchase-request/submit/${id_cart.id}`)
-            if(response.status === 200) {
+            let body = {
+                lastStatus : "Open"
+            }
+            const response : any = await axios.put(`${process.env.REACT_APP_API_SERVER}/purchase-request/submit/${id_cart.id}`, body)
+            if(response.data.errors === null) {
                 await db.collection('db_local_CART').delete()
                 localStorage.removeItem('id_cart_pr')
-                return {submit : true, message : "Success Submit Purchase Request"}
+                return {submit : true, message : response.data.message}
             } else {
                 return rejectWithValue(response.data.message)
             }

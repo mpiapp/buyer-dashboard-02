@@ -21,10 +21,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TableItem from './TableItem';
 import moment from 'moment'
 import UploadProof from './UploadProof';
-import { userCredentials } from '../../../utilities/config';
+import { userCredentials } from '../../../../utilities/config';
 import { useDispatch, useSelector } from 'react-redux';
-import { postProofDownPayment } from './reducers/purchaseOrdersReducers';
-import { RootState } from '../../../app/store';
+import { postProofDownPayment } from '../reducers/purchaseOrdersReducers';
+import { RootState } from '../../../../app/store';
 import swal from 'sweetalert'
 
 interface TabPanelProps {
@@ -35,6 +35,8 @@ interface TabPanelProps {
   
   function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
+
+    // console.log(value, index, 'ini apa')
   
     return (
       <div
@@ -66,7 +68,7 @@ const CardOrder : React.FC<any> = ({ data }) => {
 
     const store_purchaseorders = useSelector((state : RootState) => state.purchase_orders)
 
-    console.log(data, 'store_purchaseorders pacackage')
+    // console.log(data, 'store_purchaseorders pacackage')
 
     const dispatch = useDispatch()
 
@@ -88,11 +90,13 @@ const CardOrder : React.FC<any> = ({ data }) => {
     };
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        // console.log(newValue, 'new value')
+        // console.log(event, 'event')
         setValue(newValue);
     };
 
     function getPackageActive(data:any) {
-        let data_package = data.filter((key : any) => key.lastStatus === "Open")
+        let data_package = data.filter((key : any) => key.lastStatus === "New")
         return data_package
     }
 
@@ -157,7 +161,14 @@ const CardOrder : React.FC<any> = ({ data }) => {
         )
     }
 
+    // console.log(data, 'data')
 
+    // const returnIndex = (i: any, number : number) => {
+    //     // let numb = `${1}${number}`
+    //     let numb = `${1}${number}`
+    //     console.log(parseInt(numb), 'parse')
+    //     return parseInt(numb)
+    // }
 
     return (
     <Stack>
@@ -191,14 +202,15 @@ const CardOrder : React.FC<any> = ({ data }) => {
                         <Box p={2}>
                             <Grid container spacing={3} >
                                 <Grid item xl={6} lg={6} md={6} sm={6} xs={12}>
-                                    <Box pt={2} fontWeight="bold" style={{display:'flex'}}>
-                                        <Box pr={1}>{val.vendor_name} </Box>
+                                    <Box fontWeight="bold" style={{display:'flex', alignItems: 'center'}}>
+                                        <Box pr={1}>{val.vendor.name} </Box>
                                         <Button size="small" color="primary" variant="outlined">
                                             Message
                                         </Button>
                                     </Box> 
-                                    <Box pt={2} fontWeight="normal" fontSize={14}>
-                                        <Box style={{width: '80%'}}>{val.addressId}</Box>
+                                    <Box pt={1} fontWeight="normal" fontSize={14}>
+                                        <Box style={{width: '80%'}}>{val.vendor.phone}</Box>
+                                        <Box style={{width: '80%'}}>{val.vendor.address}</Box>
                                     </Box>
                                 </Grid>
                                 <Grid item xl={6} lg={6} md={6} sm={6} xs={12}>
@@ -236,7 +248,7 @@ const CardOrder : React.FC<any> = ({ data }) => {
                                                 </Tabs>
                                             </Box>
                                             <Paper style={{ backgroundColor: '#ddd' }}>
-                                                <TabPanel value={value} index={0} >
+                                                <TabPanel value={value}  index={0} >
                                                     <TableItem 
                                                         data={getPackageActive(val.packages)}  
                                                         status="Active"
@@ -245,7 +257,7 @@ const CardOrder : React.FC<any> = ({ data }) => {
                                                 <TabPanel value={value} index={1}>  
                                                     <TableItem 
                                                        data={getPackagePickPack(val.packages)} 
-                                                       status="Pick & Pack" 
+                                                       status="Pick" 
                                                     /> 
                                                 </TabPanel>
                                                 <TabPanel value={value} index={2} >
@@ -254,10 +266,11 @@ const CardOrder : React.FC<any> = ({ data }) => {
                                                         status="Ready To Ship"
                                                     /> 
                                                 </TabPanel>
-                                                <TabPanel value={value} index={3}>  
+                                                <TabPanel value={value} index={3}> 
                                                     <TableItem 
                                                         data={getPackageShipped(val.packages)} 
                                                         status="Shipped"
+                                                        dataOrders={val}
                                                     /> 
                                                 </TabPanel>
                                                 <TabPanel value={value} index={4} >

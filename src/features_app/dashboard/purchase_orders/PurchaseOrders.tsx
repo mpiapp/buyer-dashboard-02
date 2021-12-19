@@ -7,13 +7,13 @@ import {
     Paper,
     Badge
 } from '@mui/material';
-import CardOrder from './CardOrder';
+import CardOrder from './components/CardOrder';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../app/store';
 import { getPurchaseOrdersData } from './reducers/purchaseOrdersReducers';
 
 interface TabPanelProps {
-  children?: React.ReactNode;
+  children?: React.ReactNode; 
   index: number;
   value: number;
 }
@@ -50,10 +50,9 @@ const PurchaseOrders = () => {
     const dispatch = useDispatch()
     const store_purchaseorders = useSelector((state : RootState) => state.purchase_orders)
 
-
     const [value, setValue] = React.useState(0);
     const [loaded, setLoaded] = useState(false);
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
     const [dataPurchaseOrders, setDataPurchaseOrders] = useState<any[]>([]);
 
 
@@ -75,7 +74,7 @@ const PurchaseOrders = () => {
     function getPurchaseRequest() {
       setDataPurchaseOrders(store_purchaseorders.data)
       setLoaded(true)
-      setLoading(false)
+      // setLoading(false)
     }
 
     useEffect(() => {
@@ -129,7 +128,7 @@ const PurchaseOrders = () => {
                 </Box>
                 <Paper style={{ backgroundColor: '#ddd' }}>
                   <TabPanel value={value} index={0} >
-                    { loading ? "Loading..." :
+                    { store_purchaseorders.loading ? "Loading..." :
                     <>
                       { loaded && 
                         <Box>
@@ -142,7 +141,7 @@ const PurchaseOrders = () => {
                     }
                   </TabPanel>
                   <TabPanel value={value} index={1}>
-                    { loading ? "Loading..." :
+                    { store_purchaseorders.loading ? "Loading..." :
                       <>
                       { loaded && 
                         <Box>
@@ -155,7 +154,7 @@ const PurchaseOrders = () => {
                     }
                   </TabPanel>
                   <TabPanel value={value} index={2}>
-                    { loading ? "Loading..." :
+                    { store_purchaseorders.loading ? "Loading..." :
                       <>
                       { loaded && 
                         <Box>

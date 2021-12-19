@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Stack } from '@mui/material';
 import { Box } from '@mui/system'
 import { TableColumn } from 'react-data-table-component';
 import BreadCrumbs from '../../../components/BreadCrumbs'
 import DataTableBase from '../../../components/TableData'
-import { IDataRowTeams, UserSuperadminInput } from './teamsTypes';
+import { UserSuperadminInput } from './teamsTypes';
 import TextField from '@mui/material/TextField';
 import Select from 'react-select'
 import Dialog from '@mui/material/Dialog';
@@ -17,7 +17,14 @@ import * as yup from "yup";
 import { 
     ISelectOption,
 } from '../globalTypes'
-
+import { userCredentials } from '../../../utilities/config';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../app/store';
+import { getAllUsersTeams } from './reducers/teamsReducers';
+import swal from 'sweetalert';
+import axios from 'axios'
+import { postAddUserManagement } from '../step_register/reducers/stepRegisterReducers';
+import ButtonLoading from '../../../components/ButtonLoading';
 
 const validationSchema = yup    
     .object({
@@ -35,10 +42,17 @@ const validationSchema = yup
 
 const TeamsPage = () => {
 
-    const [open, setOpen] = useState(false);
-    const [IdUsers, setIdUsers] = useState <any>(null);
+    const dispatch = useDispatch()
+    const state_teams = useSelector((state : RootState) => state.users_team)
+    const state_stepregister = useSelector((state : RootState) => state.step_register)
 
-    const [optionsRoles] = useState<ISelectOption[]>([
+    // console.log(state_teams, 'teams')
+    // console.log(userCredentials, 'teams')
+
+    const [open, setOpen] = useState(false);
+    // const [IdUsers, setIdUsers] = useState <any>(null);
+
+    const [optionsRoles, setOptionsRoles] = useState<ISelectOption[]>([
         { value: "Admin", label: "Admin" },
         { value: "Picker", label: "Picker" },
         { value: "Accounting", label: "Accounting" }
@@ -78,75 +92,72 @@ const TeamsPage = () => {
         } else {
             // if(IdUserSuperadmin === null) {
                 let postUser = {
-                    name : data.name,
-                    email : data.email,
-                    password : data.password,
-                    role : selectedRoles.value,
+                    user_email: data.email,
+                    user_password : data.password,
+                    user_name : data.name,
+                    buyer_id: userCredentials.buyer_id,
+                    company_code: userCredentials.company_code,
+                    role_id: selectedRoles.value
                 }
-                console.log(postUser, 'post user')
-                console.log(IdUsers, 'id user')
-                handleClose()
-                reset()
+                dispatch(postAddUserManagement(postUser))
         }
     }
 
+    useEffect(() => {
+        if(state_stepregister.user) {
+            handleClose()
+            reset()
+            window.location.reload()
+        }
+        // eslint-disable-next-line
+    }, [state_stepregister.user]);
 
     /* istanbul ignore next */
     const onClickUpdate = (row : any) => {
-        setValue("name", row.name);
+        setValue("name", row.fullname);
         setValue("email", row.email);
         setValue("password", row.email);
-        setIdUsers(row._id)
+        // setIdUsers(row._id)
         setSelectedRoles({ value: row.role, label: row.role })
         setTimeout(() => {
             handleClickOpen()
         }, 100);
     }
 
-    const data = [
-        {
-            "_id" : "gsdawe",
-            "name": "John Doe",
-            "email": "johndoe@gmail.com",
-            "role": "owner",
-            "status": "Active",
-            "verified": false
-        },
-        {
-            "_id" : "ljfkfd",
-            "name": "John Mariyadi",
-            "email": "mariyadi@gmail.com",
-            "role": "admin",
-            "status": "Active",
-            "verified": false
-        },
-        {
-            "_id" : "tvwgfhi",
-            "name": "Thai Mikel",
-            "email": "thai@gmail.com",
-            "role": "finance",
-            "status": "Active",
-            "verified": false
-        },
-        {
-            "_id" : "pppwsdf",
-            "name": "Karin Michel",
-            "email": "karin@gmail.com",
-            "role": "picker",
-            "status": "Active",
-            "verified": false
-        },
-        {
-            "_id" : "asdgad",
-            "name": "Mario Bros",
-            "email": "mario@gmail.com",
-            "role": "admin",
-            "status": "Active",
-            "verified": false
-        }
-    ]
 
-    const columns: TableColumn<IDataRowTeams>[] = [
+    const getMasterRoles = async () => {
+        try {
+            const response : any = await axios.get(`${process.env.REACT_APP_API_SERVER}/master/roles?flag=BUYER`)
+            if(response.data.errors === null) {
+                let roles = response.data.data
+                let array_roles = []
+                for(let element of roles) {
+                    array_roles.push({
+                        label : element.name,
+                        value : element._id
+                    })
+                }
+                setOptionsRoles(array_roles)
+            } else {
+                swal('Error', `${response.data.message}`, 'error')
+            }
+            
+        } catch (error) {
+            swal('Error', `${error}`, 'error')
+        }
+    }
+
+    useEffect(() => {
+        getMasterRoles()
+        // eslint-disable-next-line
+    }, []);
+
+    useEffect(() => {
+        dispatch(getAllUsersTeams())
+        // eslint-disable-next-line
+    }, []);
+
+    const columns: TableColumn<any>[] = [
         {
             name: 'NO',
             width: '70px',
@@ -162,7 +173,7 @@ const TeamsPage = () => {
         },
         {
             name: 'NAME',
-            selector: row => row.name,
+            selector: row => row.fullname,
         },
         {
             name: 'EMAIL',
@@ -170,7 +181,7 @@ const TeamsPage = () => {
         },
         {
             name: 'ROLE',
-            selector: row => row.role,
+            selector: row => row.role_id,
         },
         {
             name: 'STATUS',
@@ -269,8 +280,13 @@ const TeamsPage = () => {
                         </Box>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose} color="warning">Cancel</Button>
-                        <Button type="submit">Submit</Button>
+                        <Button onClick={handleClose} color="warning" variant="outlined">Cancel</Button>
+                        <Box mr={1} />
+                        <ButtonLoading 
+                            type="submit"
+                            name="Submit"
+                            loading={state_stepregister.loading_user}
+                        />
                     </DialogActions>
                 </form>
             </Dialog>
@@ -278,8 +294,8 @@ const TeamsPage = () => {
             <Box sx={{pt:3}}>
                 <DataTableBase 
                     columns={columns}
-                    data={data}
-                    // progressPending={usersuperadmin?.loading}
+                    data={state_teams.data}
+                    progressPending={state_teams?.loading}
                 />
             </Box>
 

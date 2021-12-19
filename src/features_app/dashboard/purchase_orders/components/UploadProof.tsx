@@ -22,9 +22,10 @@ const UploadProof : React.FC<any> = ({
         
             if (e.target.files && e.target.files[0]) {
             const blob = e.target.files[0]
+            const file_name = blob.name.replace(/\s/g, "")
             const params = { Body: blob, 
                             Bucket: process.env.REACT_APP_S3_BUCKET_NAME, 
-                            Key: 'buyer/' + random + blob.name
+                            Key: 'buyer/' + random + file_name
                             };
             s3bucket.putObject(params)
             .on('build', (request : any) => {
@@ -39,7 +40,7 @@ const UploadProof : React.FC<any> = ({
                     console.log(err, err.stack,);
                 } 
                 else {      
-                    const imageUrl = `${process.env.REACT_APP_S3_CDN_URL}${random}${blob.name}`
+                    const imageUrl = `${process.env.REACT_APP_S3_CDN_URL}${random}${file_name}`
                     setLoading(false)
                     setDataImage(imageUrl)
                 }}

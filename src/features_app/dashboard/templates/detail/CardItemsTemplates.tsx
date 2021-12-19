@@ -9,10 +9,10 @@ import {
     Stack
 } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import TableItem from './TableItem';
+import TableItemDetail from './TableItemDetail';
 
   
-const CardItems : React.FC<any> = ({ data }) => {
+const CardItemsTemplates : React.FC<any> = ({ data }) => {
 
 
     // console.log(data ,' data detail')
@@ -63,7 +63,7 @@ const CardItems : React.FC<any> = ({ data }) => {
                                     </AccordionSummary>
                                     <AccordionDetails>
                                         <Box>
-                                            <TableItem 
+                                            <TableItemDetail 
                                                 data={val.packages[0].items} 
                                             /> 
                                         </Box>
@@ -81,4 +81,4 @@ const CardItems : React.FC<any> = ({ data }) => {
     )
 }
 
-export default CardItems
+export default CardItemsTemplates

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import algoliasearch from "algoliasearch";
 import { Stack } from '@mui/material';
 import {
@@ -11,15 +12,74 @@ import {
     Stats
 } from "react-instantsearch-dom";
 import { Button, Grid } from "@mui/material";
+import axios from 'axios'
+import swal from 'sweetalert'
 
 const searchClient = algoliasearch(
-  "X0RKYDMJ0J",
-  "db7bad336c77e33b32b84201297cb80f"
+  `${process.env.REACT_APP_API_ALGOLIA_KEY}`,
+  `${process.env.REACT_APP_API_ALGOLIA_SECRET}`
 );
 
 const AlgoliaSearch : React.FC<any> = ({
   addToCart
 }) => {
+
+  const [loading, setLoading] = useState({
+    id : null,
+    loading : false
+  });
+
+
+  const addToCartItem =  ( product : any ) => {
+    setLoading({...loading, id: product._id, loading: true})
+    setTimeout( async () => {
+      try {
+        const vendor_detail : any = await axios.get(`${process.env.REACT_APP_API_SERVER}/vendor/detail?vendor_id=${product.vendor_id}`)
+        if(vendor_detail.data.errors === null) {
+            let vendor = vendor_detail.data.data
+            let product_item = {
+              _id : product._id,
+              SKU: product.SKU,
+              brand: product.brand,
+              category_id: product.category_id,
+              description: product.description,
+              dimension: product.dimension,
+              discount: product.discount,
+              discount_price: product.discount_price,
+              images_product: product.images_product,
+              minimum_order_quantity: product.minimum_order_quantity,
+              name: product.name,
+              payment_term: product.payment_term,
+              reported_times: product.reported_times,
+              retail_price: product.retail_price,
+              slug_product: product.slug_product,
+              status: product.status,
+              stock: product.stock,
+              storage: product.storage,
+              sub_products: product.sub_products,
+              vendor : {
+                phone: vendor.phone,
+                address: vendor.address,
+                name: product.vendor_name,
+                _id: product.vendor_id
+              },
+              vendor_id: product.vendor_id,
+              vendor_name: product.vendor_name,
+              vendor_address : vendor.address,
+              vendor_phone : vendor.phone,
+              warehouse_id: product.warehouse_id,
+              note : ""
+            }
+            addToCart(product_item)
+            setLoading({...loading, id: product._id, loading: false})
+        } else {
+            swal('Error', `${vendor_detail.data.message}`, 'error')
+        }
+      } catch (error) {
+          swal('Error', `${error}`, 'error')
+      }
+    }, 1000);
+  }
 
 
   const Hit = ({ hit } : any) => (
@@ -52,14 +112,16 @@ const AlgoliaSearch : React.FC<any> = ({
                 // onClick={() => addToCart(hit)}
                 sx={{ mb : 1}}
             >View Your Special Discount</Button>
-            
             <Button 
                 variant="outlined" 
                 size="small" 
                 color="error"
                 fullWidth
-                onClick={() => addToCart(hit)}
-            >Add to Cart</Button>
+                onClick={() => addToCartItem(hit)}
+                disabled={loading.loading ? true : false}
+            >{
+              loading.id === hit._id && loading.loading ? "Loading.." : "Add to Cart"
+            }</Button>
         </div>
     </div>
   );
@@ -92,8 +154,5 @@ const AlgoliaSearch : React.FC<any> = ({
       </div>
   );
 }
-
-
-
 
 export default AlgoliaSearch;
