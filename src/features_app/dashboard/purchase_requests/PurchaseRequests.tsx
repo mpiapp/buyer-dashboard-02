@@ -72,7 +72,7 @@ const PurchaseRequests = () => {
     const onClickUpdate = async (params:any, i : any) => {
         setLoadingUpdate({...loadingUpdate, index : i, loading: true })
         try {
-            const items : any = await axios.get(`${process.env.REACT_APP_API_HOST}/purchase-request/Items/${params._id}`)
+            const items : any = await axios.get(`${process.env.REACT_APP_API_SERVER}/purchase-request/Items/${params._id}`)
             if(items.data.errors === null) {
                 let vendor = items.data.data
                 let result = await db.collection('db_local_CART').set(vendor)
