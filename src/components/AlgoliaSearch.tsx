@@ -120,7 +120,7 @@ const AlgoliaSearch : React.FC<any> = ({
                 onClick={() => addToCartItem(hit)}
                 disabled={loading.loading ? true : false}
             >{
-              loading.id === hit._id && loading.loading ? "Loading.." : "Add to Cart"
+              loading.id === hit._id && loading.loading ? "Loading.." : "Add to PR"
             }</Button>
         </div>
     </div>

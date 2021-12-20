@@ -121,7 +121,7 @@ const CartPurchaseRequest : React.FC<any> = () => {
                   <ShoppingBasketIcon style={{color: "#fff"}}/>
               </Badge>
               <div className="cart-text">
-                  <h4>View Carts</h4>
+                  <h4>View PR</h4>
                   <ArrowDropDownIcon style={{color: "#fff"}}/>
               </div>
             </div>
