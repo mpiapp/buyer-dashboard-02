@@ -158,7 +158,7 @@ const CartPurchaseRequest : React.FC<any> = () => {
                         size="small" 
                         onClick={() => dispatch(resetCart())}
                     >
-                        Reset Cart
+                        Reset PR
                     </Button>
                   </Box>
                 </Stack>
@@ -174,7 +174,7 @@ const CartPurchaseRequest : React.FC<any> = () => {
                 <div className="total-cart">
                   <h2>Total Rp. {sumTotalPrice(dataCartProps).toLocaleString()}</h2>
                   <div className="right-button">
-                    <h6>Save as a template</h6>
+                    {/* <h6>Save as a template</h6> */}
                     <Button 
                       color="primary" variant="outlined" sx={{ mr:2 }}
                       onClick={() => dispatch(savePurchaseRequest({
@@ -214,7 +214,7 @@ const CartPurchaseRequest : React.FC<any> = () => {
                 <div className="content-cart-empty">
                     <div>
                       <img alt="img empty cart" src={imgemptycart} />
-                      <h3>You cart is empty!</h3>
+                      <h3>You PR is empty!</h3>
                     </div>
                 </div>
             </div>
